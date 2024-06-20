@@ -23,6 +23,25 @@ services:
             - sail
         depends_on:
             - mysql
+    myadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: phpmyadmin
+        deploy:
+            resources:
+                limits:
+                    memory: 500m
+                reservations:
+                    memory: 100m
+        ports:
+            - "8080:80"
+        environment:
+            - PMA_ARBITRARY=1
+            - PMA_HOST=mysql
+        networks:
+            - sail
+        restart: always
+        depends_on:
+            - mysql
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:

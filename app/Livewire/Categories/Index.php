@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Livewire\Notes;
+namespace App\Livewire\Categories;
 
-use App\Models\Note;
+use App\Models\Category;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Actions\Action;
@@ -21,46 +21,29 @@ class Index extends Component implements HasForms, HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(Note::query())
+            ->query(Category::query())
             ->columns([
-                // Display only the names of the categories associated with the note
-
-                TextColumn::make('categories')
-                    ->label('Categories')
-                    ->formatStateUsing(function ($record) {
-                        return $record->categories->pluck('name')->join(', ');
-                    }),
-                TextColumn::make('title')
+                TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('content')
-                    ->limit(50),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Action::make('edit')
-                    ->url(fn (Note $record): string => route('notes.edit', $record))
+                    ->url(fn (Category $record): string => route('categories.edit', $record))
                     ->icon('heroicon-o-pencil')
-                    ->color('indigo'),
+                    ->color('info'),
                 Action::make('delete')
                     ->requiresConfirmation()
                     ->icon('heroicon-o-trash')
                     ->color('danger')
-                    ->action(fn (Note $record) => $record->delete()),
+                    ->action(fn (Category $record) => $record->delete()),
             ])
             ->headerActions([
                 Action::make('create')
-                    ->url(route('notes.create'))
+                    ->url(route('categories.create'))
                     ->icon('heroicon-o-plus')
                     ->color('indigo'),
             ]);
@@ -68,6 +51,6 @@ class Index extends Component implements HasForms, HasTable
 
     public function render(): View
     {
-        return view('livewire.notes.index');
+        return view('livewire.categories.index');
     }
 }
